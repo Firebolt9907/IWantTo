@@ -3,6 +3,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i_want_to/firebase_options.dart';
@@ -63,7 +64,8 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder()
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
         routes: {
@@ -86,6 +88,17 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  var sampleText = [
+    {'name': 'Prove Math', 'color': Colors.red},
+    {'name': 'Do Chemistry', 'color': Colors.teal},
+    {'name': 'Learn CS', 'color': Colors.green},
+    {'name': 'Study History', 'color': Colors.pink},
+    {'name': 'Create Art', 'color': Colors.yellow},
+    {'name': 'Analyze Economy', 'color': Colors.purple},
+    {'name': 'Compose Music', 'color': Colors.orange},
+    {'name': 'Understand Climate Change', 'color': Colors.blue},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,38 +129,43 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                     child: AnimatedTextKit(
                       animatedTexts: [
-                        TypewriterAnimatedText('Prove Math',
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Do Chemistry',
-                            textStyle: TextStyle(
-                                color: Colors.teal,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Learn CS',
-                            textStyle: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Study History',
-                            textStyle: TextStyle(
-                                color: Colors.pink,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Create Art',
-                            textStyle: TextStyle(
-                                color: Colors.yellow,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Analyze Economy',
-                            textStyle: TextStyle(
-                                color: Colors.purple,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Compose Music',
-                            textStyle: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold)),
-                        TypewriterAnimatedText('Understand Climate Change',
-                            textStyle: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold)),
+                        for (Map<String, dynamic> item in sampleText)
+                          TypewriterAnimatedText(item["name"],
+                              textStyle: TextStyle(
+                                  color: item["color"],
+                                  fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Prove Math',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.red,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Do Chemistry',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.teal,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Learn CS',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.green,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Study History',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.pink,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Create Art',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.yellow,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Analyze Economy',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.purple,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Compose Music',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.orange,
+                        //         fontWeight: FontWeight.bold)),
+                        // TypewriterAnimatedText('Understand Climate Change',
+                        //     textStyle: TextStyle(
+                        //         color: Colors.blue,
+                        //         fontWeight: FontWeight.bold)),
                       ],
                       repeatForever: true,
                       isRepeatingAnimation: true,

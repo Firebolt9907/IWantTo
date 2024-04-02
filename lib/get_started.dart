@@ -63,16 +63,20 @@ class _GetStartedState extends State<GetStarted> {
       ]),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(
-            bottom: (MediaQuery.viewPaddingOf(context).bottom +
-                    MediaQuery.viewInsetsOf(context).bottom) +
-                10,
-            left: 10,
-            right: 10),
+            // bottom: (MediaQuery.viewPaddingOf(context).bottom +
+            //         MediaQuery.viewInsetsOf(context).bottom) +
+            //     10,
+            // left: 10,
+            // right: 10
+            ),
         child: SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            height: 80,
+            height: 80 +
+                MediaQuery.viewPaddingOf(context).bottom +
+                MediaQuery.viewInsetsOf(context).bottom,
             child: CupertinoButton(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               child: Text(
                 widget.login ? 'Login' : 'Sign Up',
                 style: TextStyle(
@@ -101,7 +105,6 @@ class _GetStartedState extends State<GetStarted> {
                           ));
                     });
                   } on FirebaseAuthException catch (e) {
-                  } catch (e) {
                     print(e);
                   }
                 } else {
