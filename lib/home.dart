@@ -9,10 +9,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> subjects = [
+    {
+      'name': 'Math',
+    },
+    {
+      'name': 'Physics',
+    },
+    {
+      'name': 'Chemistry',
+    },
+    {
+      'name': 'Biology',
+    },
+    {
+      'name': 'English',
+    },
+  ];
+
+  Map<String, dynamic> icons = {
+    'Math': Icons.calculate,
+    "Physics": Icons.science,
+    "Chemistry": Icons.science_outlined,
+    "Biology": Icons.science_outlined,
+    "English": Icons.language,
+    "History": Icons.history,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: [Text('Home Page')]),
+      body: ListView.builder(
+        itemCount: subjects.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(subjects[0]['name']),
+          );
+        },
+      ),
     );
   }
 }

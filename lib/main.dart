@@ -51,16 +51,21 @@ class _MyAppState extends State<MyApp> {
           colorScheme: lightColorScheme ??
               ColorScheme.fromSwatch(
                   primarySwatch: Colors.green, brightness: Brightness.light),
+          backgroundColor:
+              lightColorScheme != null ? Colors.lightGreen[100] : null,
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder()
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
         darkTheme: ThemeData(
           colorScheme: darkColorScheme ??
               ColorScheme.fromSwatch(
                   primarySwatch: Colors.green, brightness: Brightness.dark),
+          backgroundColor:
+              darkColorScheme != null ? Colors.lightGreen[900] : null,
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -113,7 +118,7 @@ class _FirstPageState extends State<FirstPage> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: 15,
-                  bottom: 160 + MediaQuery.viewPaddingOf(context).bottom),
+                  bottom: 240 + MediaQuery.viewPaddingOf(context).bottom),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,38 +139,6 @@ class _FirstPageState extends State<FirstPage> {
                               textStyle: TextStyle(
                                   color: item["color"],
                                   fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Prove Math',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.red,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Do Chemistry',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.teal,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Learn CS',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.green,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Study History',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.pink,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Create Art',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.yellow,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Analyze Economy',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.purple,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Compose Music',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.orange,
-                        //         fontWeight: FontWeight.bold)),
-                        // TypewriterAnimatedText('Understand Climate Change',
-                        //     textStyle: TextStyle(
-                        //         color: Colors.blue,
-                        //         fontWeight: FontWeight.bold)),
                       ],
                       repeatForever: true,
                       isRepeatingAnimation: true,
@@ -188,7 +161,7 @@ class _FirstPageState extends State<FirstPage> {
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20)),
                       child: Text(
-                        'Login',
+                        'Skip Login',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary,
                             fontSize: 30,
@@ -199,10 +172,31 @@ class _FirstPageState extends State<FirstPage> {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) => GetStarted(login: true),
+                              builder: (context) => HomePage(),
                             ));
                       },
                     )),
+                // SizedBox(
+                //     width: MediaQuery.sizeOf(context).width,
+                //     height: 80,
+                //     child: CupertinoButton(
+                //       borderRadius: BorderRadius.all(Radius.zero),
+                //       child: Text(
+                //         'Login',
+                //         style: TextStyle(
+                //             color: Theme.of(context).colorScheme.onSecondary,
+                //             fontSize: 30,
+                //             fontWeight: FontWeight.bold),
+                //       ),
+                //       color: Theme.of(context).colorScheme.secondary,
+                //       onPressed: () {
+                //         Navigator.push(
+                //             context,
+                //             CupertinoPageRoute(
+                //               builder: (context) => GetStarted(login: true),
+                //             ));
+                //       },
+                //     )),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width,
                   height: 80 + MediaQuery.viewPaddingOf(context).bottom,
@@ -214,7 +208,7 @@ class _FirstPageState extends State<FirstPage> {
                       child: Text(
                         'Get Started',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 30,
                             fontWeight: FontWeight.bold),
                       ),
@@ -224,7 +218,7 @@ class _FirstPageState extends State<FirstPage> {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => GetStarted(login: false),
+                            builder: (context) => GetStarted(),
                           ));
                     },
                   ),
