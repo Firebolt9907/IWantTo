@@ -12,18 +12,24 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> subjects = [
     {
       'name': 'Math',
+      'clickable': true,
+      'route': '/math'
+
     },
-    {
-      'name': 'Physics',
-    },
-    {
-      'name': 'Chemistry',
-    },
-    {
-      'name': 'Biology',
-    },
-    {
-      'name': 'English',
+    // {
+    //   'name': 'Physics',
+    // },
+    // {
+    //   'name': 'Chemistry',
+    // },
+    // {
+    //   'name': 'Biology',
+    // },
+    // {
+    //   'name': 'English',
+    // },
+    {'name': "More Coming Soon",
+    'clickable': false,
     },
   ];
 
@@ -42,8 +48,21 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: subjects.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(subjects[0]['name']),
+          // return ListTile(
+          //   title: Text(subjects[index]['name']),
+          //   leading: Icon(icons[subjects[index]['name']]),
+          // );
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+            child: Card(
+                child: ListTile(
+              title:
+                  Text(subjects[index]['name'], style: TextStyle(fontSize: 20)),
+              leading: Icon(
+                icons[subjects[index]['name']],
+                size: 40,
+              ),
+            )),
           );
         },
       ),

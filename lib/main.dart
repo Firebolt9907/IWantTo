@@ -50,9 +50,13 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: lightColorScheme ??
               ColorScheme.fromSwatch(
-                  primarySwatch: Colors.green, brightness: Brightness.light),
+                primarySwatch: Colors.green,
+                brightness: Brightness.light,
+                backgroundColor:
+                    lightColorScheme == null ? Colors.lightGreen[100] : null,
+              ),
           backgroundColor:
-              lightColorScheme != null ? Colors.lightGreen[100] : null,
+              lightColorScheme == null ? Colors.lightGreen[100] : null,
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -63,9 +67,14 @@ class _MyAppState extends State<MyApp> {
         darkTheme: ThemeData(
           colorScheme: darkColorScheme ??
               ColorScheme.fromSwatch(
-                  primarySwatch: Colors.green, brightness: Brightness.dark),
+                primarySwatch: Colors.green,
+                brightness: Brightness.dark,
+                backgroundColor: darkColorScheme == null
+                    ? Color.fromARGB(255, 20, 28, 20)
+                    : null,
+              ),
           backgroundColor:
-              darkColorScheme != null ? Colors.lightGreen[900] : null,
+              darkColorScheme == null ? Colors.lightGreen[900] : null,
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -75,7 +84,7 @@ class _MyAppState extends State<MyApp> {
         ),
         routes: {
           '/start': (context) => FirstPage(),
-          '/home': (context) => HomePage()
+          '/home': (context) => HomePage(),
         },
         initialRoute:
             // FirebaseAuth.instance.currentUser == null ? '/start' : '/home',
@@ -118,7 +127,11 @@ class _FirstPageState extends State<FirstPage> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: 15,
-                  bottom: 240 + MediaQuery.viewPaddingOf(context).bottom),
+                  bottom: MediaQuery.sizeOf(context).width /
+                              MediaQuery.sizeOf(context).height >
+                          9 / 16
+                      ? 0
+                      : 240 + MediaQuery.viewPaddingOf(context).bottom),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,33 +162,59 @@ class _FirstPageState extends State<FirstPage> {
             ),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
+            alignment: MediaQuery.sizeOf(context).width /
+                        MediaQuery.sizeOf(context).height >
+                    9 / 16
+                ? Alignment.centerRight
+                : Alignment.bottomRight,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 80,
-                    child: CupertinoButton(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                      child: Text(
-                        'Skip Login',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      color: Theme.of(context).colorScheme.secondary,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => HomePage(),
-                            ));
-                      },
-                    )),
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? 10.0
+                          : 0,
+                      right: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? 10
+                          : 0),
+                  child: SizedBox(
+                      width: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? MediaQuery.sizeOf(context).width / 2 - 10
+                          : MediaQuery.sizeOf(context).width,
+                      height: 80,
+                      child: CupertinoButton(
+                        borderRadius: MediaQuery.sizeOf(context).width /
+                                    MediaQuery.sizeOf(context).height >
+                                9 / 16
+                            ? BorderRadius.circular(20)
+                            : BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20)),
+                        child: Text(
+                          'Skip Login',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        color: Theme.of(context).colorScheme.secondary,
+                        onPressed: () {
+                          // Navigator.push(
+                          //     context,
+                          //     CupertinoPageRoute(
+                          //       builder: (context) => HomePage(),
+                          //     ));
+                          Navigator.pushNamed(context, '/home');
+                        },
+                      )),
+                ),
                 // SizedBox(
                 //     width: MediaQuery.sizeOf(context).width,
                 //     height: 80,
@@ -197,30 +236,59 @@ class _FirstPageState extends State<FirstPage> {
                 //             ));
                 //       },
                 //     )),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: 80 + MediaQuery.viewPaddingOf(context).bottom,
-                  child: CupertinoButton(
-                    borderRadius: BorderRadius.zero,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.viewPaddingOf(context).bottom),
-                      child: Text(
-                        'Get Started',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold),
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? 10.0 + MediaQuery.viewPaddingOf(context).bottom
+                          : 0,
+                      right: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? 10
+                          : 0),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width /
+                                MediaQuery.sizeOf(context).height >
+                            9 / 16
+                        ? MediaQuery.sizeOf(context).width / 2 - 10
+                        : MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).width /
+                                MediaQuery.sizeOf(context).height >
+                            9 / 16
+                        ? 80
+                        : 80 + MediaQuery.viewPaddingOf(context).bottom,
+                    child: CupertinoButton(
+                      borderRadius: MediaQuery.sizeOf(context).width /
+                                  MediaQuery.sizeOf(context).height >
+                              9 / 16
+                          ? BorderRadius.circular(20)
+                          : BorderRadius.zero,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.sizeOf(context).width /
+                                        MediaQuery.sizeOf(context).height >
+                                    9 / 16
+                                ? 0
+                                : MediaQuery.viewPaddingOf(context).bottom),
+                        child: Text(
+                          'Get Started',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
+                      color: Theme.of(context).colorScheme.primary,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => GetStarted(),
+                            ));
+                      },
                     ),
-                    color: Theme.of(context).colorScheme.primary,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => GetStarted(),
-                          ));
-                    },
                   ),
                 ),
               ],
