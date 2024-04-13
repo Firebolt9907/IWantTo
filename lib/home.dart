@@ -15,15 +15,23 @@ class _HomePageState extends State<HomePage> {
     {'name': 'Math', 'clickable': true, 'route': '/math'},
     {
       'name': 'Physics',
+      'clickable': true,
+      'route': '/physics',
     },
     {
       'name': 'Chemistry',
+      'clickable': true,
+      'route': '/chemistry',
     },
     {
       'name': 'Biology',
+      'clickable': true,
+      'route': '/biology',
     },
     {
       'name': 'English',
+      'clickable': true,
+      'route': '/english',
     },
     {
       'name': "More Coming Soon",
