@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 size: 40,
               ),
               onTap: () {
-                context.go(subjects[index]['route']);
+                context.go("/s" + subjects[index]['route']);
               },
             )),
           );

@@ -30,14 +30,13 @@ void main() async {
 final _router = GoRouter(
   initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => HomePage(),
-      routes: [
-        GoRoute(path: ":subject", builder: (context, state) => SubjectPage(subject: state.pathParameters['subject']),)
-      ]
-
-    ),
+    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
+      GoRoute(
+        path: "s/:subject",
+        builder: (context, state) =>
+            SubjectPage(subject: state.pathParameters['subject']),
+      )
+    ]),
     GoRoute(
       path: '/start',
       builder: (context, state) => FirstPage(),
@@ -238,7 +237,8 @@ class _FirstPageState extends State<FirstPage> {
                           //     CupertinoPageRoute(
                           //       builder: (context) => HomePage(),
                           //     ));
-                          Navigator.pushNamed(context, '/');
+                          // Navigator.pushNamed(context, '/');
+                          context.go("/");
                         },
                       )),
                 ),
@@ -314,7 +314,7 @@ class _FirstPageState extends State<FirstPage> {
                         //     CupertinoPageRoute(
                         //       builder: (context) => GetStarted(),
                         //     ));
-                        context.go("/sign-in");
+                        context.go("/start/sign-in");
                       },
                     ),
                   ),
