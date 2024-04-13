@@ -6,9 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:i_want_to/firebase_options.dart';
 import 'package:i_want_to/get_started.dart';
 import 'package:i_want_to/home.dart';
+import 'package:i_want_to/subject.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,30 @@ void main() async {
   );
   runApp(const MyApp());
 }
+
+final _router = GoRouter(
+  initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => HomePage(),
+      routes: [
+        GoRoute(path: ":subject", builder: (context, state) => SubjectPage(subject: state.pathParameters['subject']),)
+      ]
+
+    ),
+    GoRoute(
+      path: '/start',
+      builder: (context, state) => FirstPage(),
+      routes: [
+        GoRoute(
+          path: 'sign-in',
+          builder: (context, state) => GetStarted(),
+        ),
+      ],
+    ),
+  ],
+);
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -45,7 +71,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      return MaterialApp(
+      return MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: lightColorScheme ??
@@ -73,22 +99,23 @@ class _MyAppState extends State<MyApp> {
                     ? Color.fromARGB(255, 20, 28, 20)
                     : null,
               ),
-          backgroundColor:
-              darkColorScheme == null ? Colors.lightGreen[900] : null,
           useMaterial3: true,
+          backgroundColor:
+              darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        routes: {
-          '/start': (context) => FirstPage(),
-          '/home': (context) => HomePage(),
-        },
-        initialRoute:
-            // FirebaseAuth.instance.currentUser == null ? '/start' : '/home',
-            '/start',
+        routerConfig: _router,
+        // routes: {
+        //   '/start': (context) => FirstPage(),
+        //   '/': (context) => HomePage(),
+        // },
+        // initialRoute:
+        //     FirebaseAuth.instance.currentUser == null ? '/start' : '/',
+        // '/start',
       );
     });
   }
@@ -211,7 +238,7 @@ class _FirstPageState extends State<FirstPage> {
                           //     CupertinoPageRoute(
                           //       builder: (context) => HomePage(),
                           //     ));
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pushNamed(context, '/');
                         },
                       )),
                 ),
@@ -282,11 +309,12 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                       color: Theme.of(context).colorScheme.primary,
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => GetStarted(),
-                            ));
+                        // Navigator.push(
+                        //     context,
+                        //     CupertinoPageRoute(
+                        //       builder: (context) => GetStarted(),
+                        //     ));
+                        context.go("/sign-in");
                       },
                     ),
                   ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:i_want_to/home.dart';
 
 class GetStarted extends StatefulWidget {
@@ -18,6 +19,8 @@ class _GetStartedState extends State<GetStarted> {
   final TextEditingController _passwordRepeat = TextEditingController();
   final TextEditingController _email = TextEditingController();
   bool login = false;
+  bool showPassword = false;
+  var error = "";
 
   @override
   void initState() {
@@ -27,6 +30,15 @@ class _GetStartedState extends State<GetStarted> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CupertinoNavigationBar(
+        backgroundColor: Colors.transparent,
+        border: Border.all(color: Colors.transparent),
+        leading: CupertinoNavigationBarBackButton(
+          previousPageTitle: "Back",
+          onPressed: () => context.go("/start"),
+        ),
+        
+      ),
       body: ListView(
           /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
             Align(
@@ -34,20 +46,21 @@ class _GetStartedState extends State<GetStarted> {
               child: Padding(
                 padding: EdgeInsets.only(),
                 child: Text(
-                  login ? 'Sign In' : 'Sign Up',
+                  showPassword ? "Enter Password" : "Enter Email",
+                  // login ? 'Sign In' : 'Sign Up',
                   style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-            IntrinsicWidth(
-              child: ElevatedButton(
-                  child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
-                  onPressed: () {
-                    setState(() {
-                      login = !login;
-                    });
-                  }),
-            ),
+            // IntrinsicWidth(
+            //   child: ElevatedButton(
+            //       child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
+            //       onPressed: () {
+            //         setState(() {
+            //           login = !login;
+            //         });
+            //       }),
+            // ),
             Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -59,39 +72,50 @@ class _GetStartedState extends State<GetStarted> {
                     border: OutlineInputBorder(),
                   ),
                   autofillHints: const [AutofillHints.email],
-                  onChanged: (text) {},
+                  onChanged: (text) {
+                    if (showPassword) {
+                      setState(() {
+                        showPassword = false;
+                      });
+                    }
+                  },
                   controller: _email,
                 )),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextField(
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
-                    hintText: "Enter Password...",
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
-                  ),
-                  autofillHints: const [AutofillHints.password],
-                  onChanged: (text) {},
-                  controller: _password,
-                  obscureText: true,
-                )),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextField(
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
-                    hintText: "Confirm Password...",
-                    labelText: "Confirm Password",
-                    border: OutlineInputBorder(),
-                  ),
-                  autofillHints: const [AutofillHints.password],
-                  onChanged: (text) {},
-                  controller: _passwordRepeat,
-                  obscureText: true,
-                )),
+            showPassword
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: const InputDecoration(
+                        hintText: "Enter Password...",
+                        labelText: "Password",
+                        border: OutlineInputBorder(),
+                      ),
+                      autofillHints: const [AutofillHints.password],
+                      onChanged: (text) {},
+                      controller: _password,
+                      obscureText: true,
+                    ))
+                : Container(),
+            showPassword && !login
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: const InputDecoration(
+                        hintText: "Confirm Password...",
+                        labelText: "Confirm Password",
+                        border: OutlineInputBorder(),
+                      ),
+                      autofillHints: const [AutofillHints.password],
+                      onChanged: (text) {},
+                      controller: _passwordRepeat,
+                      obscureText: true,
+                    ))
+                : Container(),
+            Text(error, style: TextStyle(color: Colors.red)),
           ]),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(
@@ -117,20 +141,53 @@ class _GetStartedState extends State<GetStarted> {
                         ? MediaQuery.viewPaddingOf(context).bottom
                         : MediaQuery.viewInsetsOf(context).bottom),
                 child: Text(
-                  login ? 'Sign In' : 'Sign Up',
+                  showPassword
+                      ? login
+                          ? 'Sign In'
+                          : 'Sign Up'
+                      : "Continue",
                   style: TextStyle(
-                      color: login
+                      color: !showPassword
                           ? Theme.of(context).colorScheme.onSecondary
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 30,
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              color: login
+              color: !showPassword
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.primary,
               onPressed: () {
-                if (login) {
+                if (!showPassword) {
+                  FirebaseAuth.instance
+                      .fetchSignInMethodsForEmail(_email.text)
+                      .then(
+                    (value) {
+                      if (value.isEmpty) {
+                        setState(
+                          () {
+                            showPassword = true;
+                          },
+                        );
+                      } else {
+                        setState(
+                          () {
+                            showPassword = true;
+                            login = true;
+                          },
+                        );
+                      }
+                    },
+                  ).onError((error, stackTrace) {
+                    print(error.toString());
+                    if (error.toString().endsWith(
+                        "[firebase_auth/invalid-email] The email address is badly formatted.")) {
+                      setState(() {
+                        error = "Invalid Email";
+                      });
+                    }
+                  });
+                } else if (login) {
                   try {
                     FirebaseAuth.instance
                         .signInWithEmailAndPassword(
@@ -138,11 +195,13 @@ class _GetStartedState extends State<GetStarted> {
                       password: _password.text,
                     )
                         .then((auth) {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
+                      // Navigator.push(
+                      //     context,
+                      //     CupertinoPageRoute(
+                      //       builder: (context) => HomePage(),
+                      //     ));
+                      // Navigator.pushNamed(context, '/');
+                      context.go('/');
                     });
                   } on FirebaseAuthException catch (e) {
                     print(e);
