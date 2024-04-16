@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart'
-    hide EmailAuthProvider, GoogleAuthProvider, AppleAuthProvider;
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +25,73 @@ class _GetStartedState extends State<GetStarted> {
     super.initState();
   }
 
+  void checkEmail() {
+    FirebaseAuth.instance.fetchSignInMethodsForEmail(_email.text).then(
+      (value) {
+        if (value.isEmpty) {
+          setState(
+            () {
+              showPassword = true;
+            },
+          );
+        } else {
+          setState(
+            () {
+              showPassword = true;
+              login = true;
+            },
+          );
+        }
+      },
+    ).onError((error, stackTrace) {
+      print(error.toString());
+      if (error.toString().endsWith(
+          "[firebase_auth/invalid-email] The email address is badly formatted.")) {
+        setState(() {
+          error = "Invalid Email";
+        });
+      }
+    });
+  }
+
+  void signIn() {
+    if (login) {
+      try {
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+          email: _email.text,
+          password: _password.text,
+        )
+            .then((auth) {
+          // Navigator.push(
+          //     context,
+          //     CupertinoPageRoute(
+          //       builder: (context) => HomePage(),
+          //     ));
+          // Navigator.pushNamed(context, '/');
+          context.go('/');
+        });
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
+    } else {
+      try {
+        FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.text,
+          password: _password.text,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +100,8 @@ class _GetStartedState extends State<GetStarted> {
         border: Border.all(color: Colors.transparent),
         leading: CupertinoNavigationBarBackButton(
           previousPageTitle: "Back",
-          onPressed: () => context.go("/start"),
+          onPressed: () => context.pop(),
         ),
-        
       ),
       body: ListView(
           /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
@@ -71,13 +135,17 @@ class _GetStartedState extends State<GetStarted> {
                     labelText: "Email",
                     border: OutlineInputBorder(),
                   ),
-                  autofillHints: const [AutofillHints.email],
+                  autofillHints: const [AutofillHints.username],
+                  autofocus: !showPassword,
                   onChanged: (text) {
                     if (showPassword) {
                       setState(() {
                         showPassword = false;
                       });
                     }
+                  },
+                  onSubmitted: (u) {
+                    checkEmail();
                   },
                   controller: _email,
                 )),
@@ -93,7 +161,13 @@ class _GetStartedState extends State<GetStarted> {
                         border: OutlineInputBorder(),
                       ),
                       autofillHints: const [AutofillHints.password],
+                      autofocus: true,
                       onChanged: (text) {},
+                      onSubmitted: (u) {
+                        if (login) {
+                          signIn();
+                        }
+                      },
                       controller: _password,
                       obscureText: true,
                     ))
@@ -111,6 +185,11 @@ class _GetStartedState extends State<GetStarted> {
                       ),
                       autofillHints: const [AutofillHints.password],
                       onChanged: (text) {},
+                      onSubmitted: (u) {
+                        if (!login) {
+                          signIn();
+                        }
+                      },
                       controller: _passwordRepeat,
                       obscureText: true,
                     ))
@@ -159,68 +238,9 @@ class _GetStartedState extends State<GetStarted> {
                   : Theme.of(context).colorScheme.primary,
               onPressed: () {
                 if (!showPassword) {
-                  FirebaseAuth.instance
-                      .fetchSignInMethodsForEmail(_email.text)
-                      .then(
-                    (value) {
-                      if (value.isEmpty) {
-                        setState(
-                          () {
-                            showPassword = true;
-                          },
-                        );
-                      } else {
-                        setState(
-                          () {
-                            showPassword = true;
-                            login = true;
-                          },
-                        );
-                      }
-                    },
-                  ).onError((error, stackTrace) {
-                    print(error.toString());
-                    if (error.toString().endsWith(
-                        "[firebase_auth/invalid-email] The email address is badly formatted.")) {
-                      setState(() {
-                        error = "Invalid Email";
-                      });
-                    }
-                  });
-                } else if (login) {
-                  try {
-                    FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
-                      email: _email.text,
-                      password: _password.text,
-                    )
-                        .then((auth) {
-                      // Navigator.push(
-                      //     context,
-                      //     CupertinoPageRoute(
-                      //       builder: (context) => HomePage(),
-                      //     ));
-                      // Navigator.pushNamed(context, '/');
-                      context.go('/');
-                    });
-                  } on FirebaseAuthException catch (e) {
-                    print(e);
-                  }
+                  checkEmail();
                 } else {
-                  try {
-                    FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: _email.text,
-                      password: _password.text,
-                    );
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'weak-password') {
-                      print('The password provided is too weak.');
-                    } else if (e.code == 'email-already-in-use') {
-                      print('The account already exists for that email.');
-                    }
-                  } catch (e) {
-                    print(e);
-                  }
+                  signIn();
                 }
               },
             )),

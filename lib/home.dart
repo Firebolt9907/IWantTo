@@ -15,22 +15,22 @@ class _HomePageState extends State<HomePage> {
     {'name': 'Math', 'clickable': true, 'route': '/math'},
     {
       'name': 'Physics',
-      'clickable': true,
+      'clickable': false,
       'route': '/physics',
     },
     {
       'name': 'Chemistry',
-      'clickable': true,
+      'clickable': false,
       'route': '/chemistry',
     },
     {
       'name': 'Biology',
-      'clickable': true,
+      'clickable': false,
       'route': '/biology',
     },
     {
       'name': 'English',
-      'clickable': true,
+      'clickable': false,
       'route': '/english',
     },
     {
@@ -51,53 +51,103 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: subjects.length + 2,
-        itemBuilder: (context, index) {
-          // return ListTile(
-          //   title: Text(subjects[index]['name']),
-          //   leading: Icon(icons[subjects[index]['name']]),
-          // );
-          if (index == subjects.length) {
-            return Center(
-              child: Text(
-                  "uid:" + (FirebaseAuth.instance.currentUser?.uid ?? "null")),
-            );
-          } else if (index == subjects.length + 1) {
-            return IntrinsicWidth(
-              child: ElevatedButton(
-                  child: IntrinsicWidth(
-                    child: Text(FirebaseAuth.instance.currentUser?.uid == null
-                        ? "Sign In"
-                        : "Sign Out"),
-                  ),
-                  onPressed: () {
-                    if (FirebaseAuth.instance.currentUser?.uid == null) {
-                      Navigator.pushNamed(context, "/start");
-                    }
-                    FirebaseAuth.instance.signOut();
-                    setState(() {});
-                  }),
-            );
-          }
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-            child: Card(
-                child: ListTile(
-              title:
-                  Text(subjects[index]['name'], style: TextStyle(fontSize: 20)),
-              leading: Icon(
-                icons[subjects[index]['name']],
-                size: 40,
+      body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              CupertinoSliverNavigationBar(
+                largeTitle: Text("Home",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground)),
+                backgroundColor: Theme.of(context).colorScheme.background,
+                border: Border.all(color: Colors.transparent),
+                trailing: IntrinsicWidth(
+                  child: ElevatedButton(
+                      child: IntrinsicWidth(
+                        child: Text(
+                            FirebaseAuth.instance.currentUser?.uid == null
+                                ? "Sign In"
+                                : "Sign Out"),
+                      ),
+                      onPressed: () {
+                        if (FirebaseAuth.instance.currentUser?.uid == null) {
+                          // Navigator.pushNamed(context, "/start");
+                          context.go("/sign-in");
+                        } else {
+                          FirebaseAuth.instance.signOut();
+                        }
+                        setState(() {});
+                      }),
+                ),
               ),
-              onTap: () {
-                context.go("/s" + subjects[index]['route']);
-              },
-            )),
-          );
-        },
-      ),
+            ];
+          },
+          body: ListView.builder(
+            itemCount: subjects.length + 2,
+            itemBuilder: (context, index) {
+              // return ListTile(
+              //   title: Text(subjects[index]['name']),
+              //   leading: Icon(icons[subjects[index]['name']]),
+              // );
+              if (index == subjects.length) {
+                return Center(
+                  child: Text("uid:" +
+                      (FirebaseAuth.instance.currentUser?.uid ?? "null")),
+                );
+              } else if (index == subjects.length + 1) {
+                return IntrinsicWidth(
+                  child: ElevatedButton(
+                      child: IntrinsicWidth(
+                        child: Text(
+                            FirebaseAuth.instance.currentUser?.uid == null
+                                ? "Sign In"
+                                : "Sign Out"),
+                      ),
+                      onPressed: () {
+                        if (FirebaseAuth.instance.currentUser?.uid == null) {
+                          // Navigator.pushNamed(context, "/start");
+                          context.go("/start/sign-in");
+                        } else {
+                          FirebaseAuth.instance.signOut();
+                        }
+                        setState(() {});
+                      }),
+                );
+              }
+
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.background),
+                          surfaceTintColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.onBackground)),
+                      child: Row(children: [
+                        Icon(
+                          icons[subjects[index]['name']],
+                          size: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, top: 10, bottom: 10),
+                          child: Text(
+                              subjects[index]['name'] +
+                                  "${subjects[index]['clickable'] || subjects[index]['name'] == "More Coming Soon" ? "" : " (Coming Soon)"}",
+                              style: TextStyle(fontSize: 25)),
+                        ),
+                      ]),
+                      onPressed: () {
+                        if (subjects[index]['clickable']) {
+                          context.go("/" + subjects[index]['name']);
+                        }
+                      },
+                    )),
+              );
+            },
+          )),
     );
   }
 }

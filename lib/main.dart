@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,12 +9,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:i_want_to/course.dart';
 import 'package:i_want_to/firebase_options.dart';
 import 'package:i_want_to/get_started.dart';
 import 'package:i_want_to/home.dart';
 import 'package:i_want_to/subject.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
+  setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -30,13 +35,6 @@ void main() async {
 final _router = GoRouter(
   initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
-      GoRoute(
-        path: "s/:subject",
-        builder: (context, state) =>
-            SubjectPage(subject: state.pathParameters['subject']),
-      )
-    ]),
     GoRoute(
       path: '/start',
       builder: (context, state) => FirstPage(),
@@ -47,6 +45,25 @@ final _router = GoRouter(
         ),
       ],
     ),
+    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
+      GoRoute(
+        path: 'sign-in',
+        builder: (context, state) => GetStarted(),
+      ),
+      GoRoute(
+          path: ":subject",
+          builder: (context, state) => SubjectPage(
+                subject: state.pathParameters['subject'],
+              ),
+          routes: [
+            GoRoute(
+                path: ":course",
+                builder: (context, state) => CoursePage(
+                      course: state.pathParameters["course"],
+                      subject: state.pathParameters["subject"],
+                    ))
+          ])
+    ]),
   ],
 );
 
@@ -89,24 +106,24 @@ class _MyAppState extends State<MyApp> {
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        darkTheme: ThemeData(
-          colorScheme: darkColorScheme ??
-              ColorScheme.fromSwatch(
-                primarySwatch: Colors.green,
-                brightness: Brightness.dark,
-                backgroundColor: darkColorScheme == null
-                    ? Color.fromARGB(255, 20, 28, 20)
-                    : null,
-              ),
-          useMaterial3: true,
-          backgroundColor:
-              darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
-          pageTransitionsTheme: PageTransitionsTheme(builders: {
-            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
-          }),
-        ),
+        // darkTheme: ThemeData(
+        //   colorScheme: darkColorScheme ??
+        //       ColorScheme.fromSwatch(
+        //         primarySwatch: Colors.green,
+        //         brightness: Brightness.dark,
+        //         backgroundColor: darkColorScheme == null
+        //             ? Color.fromARGB(255, 20, 28, 20)
+        //             : null,
+        //       ),
+        // useMaterial3: true,
+        // backgroundColor:
+        //     darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
+        // pageTransitionsTheme: PageTransitionsTheme(builders: {
+        //   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        //   TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        //   defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
+        // }),
+        // ),
         routerConfig: _router,
         // routes: {
         //   '/start': (context) => FirstPage(),
