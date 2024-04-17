@@ -60,29 +60,37 @@ class _HomePageState extends State<HomePage> {
                         color: Theme.of(context).colorScheme.onBackground)),
                 backgroundColor: Theme.of(context).colorScheme.background,
                 border: Border.all(color: Colors.transparent),
-                trailing: IntrinsicWidth(
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.background),
-                          surfaceTintColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.onBackground)),
-                      child: IntrinsicWidth(
-                        child: Text(
-                            FirebaseAuth.instance.currentUser?.uid == null
-                                ? "Sign In"
-                                : "Sign Out"),
+                trailing: FirebaseAuth.instance.currentUser?.uid == null
+                    ? IntrinsicWidth(
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).colorScheme.background),
+                                surfaceTintColor: MaterialStateProperty.all(
+                                    Theme.of(context)
+                                        .colorScheme
+                                        .onBackground)),
+                            child: IntrinsicWidth(
+                              child: Text("Sign In"),
+                            ),
+                            onPressed: () {
+                              if (FirebaseAuth.instance.currentUser?.uid ==
+                                  null) {
+                                // Navigator.pushNamed(context, "/start");
+                                context.go("/sign-in");
+                              } else {
+                                FirebaseAuth.instance.signOut();
+                              }
+                              setState(() {});
+                            }),
+                      )
+                    : IconButton(
+                        icon: Icon(CupertinoIcons.settings_solid,
+                            color: Theme.of(context).colorScheme.primary),
+                        onPressed: () {
+                          context.go("/settings");
+                        },
                       ),
-                      onPressed: () {
-                        if (FirebaseAuth.instance.currentUser?.uid == null) {
-                          // Navigator.pushNamed(context, "/start");
-                          context.go("/sign-in");
-                        } else {
-                          FirebaseAuth.instance.signOut();
-                        }
-                        setState(() {});
-                      }),
-                ),
               ),
             ];
           },

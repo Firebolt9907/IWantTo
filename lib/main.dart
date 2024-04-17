@@ -13,6 +13,7 @@ import 'package:i_want_to/course.dart';
 import 'package:i_want_to/firebase_options.dart';
 import 'package:i_want_to/get_started.dart';
 import 'package:i_want_to/home.dart';
+import 'package:i_want_to/settings.dart';
 import 'package:i_want_to/subject.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -51,6 +52,10 @@ final _router = GoRouter(
         builder: (context, state) => GetStarted(),
       ),
       GoRoute(
+        path: 'Settings',
+        builder: (context, state) => SettingsPage(),
+      ),
+      GoRoute(
           path: ":subject",
           builder: (context, state) => SubjectPage(
                 subject: state.pathParameters['subject'],
@@ -74,8 +79,26 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+var color = "green";
+
 class _MyAppState extends State<MyApp> {
   var loggedIn = false;
+  Map<String, Color> colors = {
+    "green": Colors.green,
+    "blue": Colors.blue,
+    "red": Colors.red,
+    "yellow": Colors.yellow,
+    "purple": Colors.purple,
+    "orange": Colors.orange,
+    "teal": Colors.teal,
+    "brown": Colors.brown,
+    "grey": Colors.grey,
+    "indigo": Colors.indigo,
+    "cyan": Colors.cyan,
+    "lime": Colors.lime,
+    "amber": Colors.amber,
+    "pink": Colors.pink,
+  };
 
   @override
   void initState() {
@@ -92,7 +115,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: lightColorScheme ??
               ColorScheme.fromSeed(
-                seedColor: Colors.green,
+                seedColor: colors[color]!,
                 brightness: Brightness.light,
                 // background: const Color.fromARGB(255, 238, 243, 224),
                 // onBackground: Color.fromARGB(255, 6, 95, 0)
@@ -123,7 +146,7 @@ class _MyAppState extends State<MyApp> {
         darkTheme: ThemeData(
           colorScheme: darkColorScheme ??
               ColorScheme.fromSeed(
-                seedColor: Colors.green,
+                seedColor: colors[color]!,
                 brightness: Brightness.dark,
                 // backgroundColor: Color.fromARGB(255, 20, 28, 20),
               ),
