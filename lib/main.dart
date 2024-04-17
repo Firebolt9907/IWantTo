@@ -92,10 +92,11 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: lightColorScheme ??
               ColorScheme.fromSeed(
-                  seedColor: Colors.green,
-                  brightness: Brightness.light,
-                  background: const Color.fromARGB(255, 238, 243, 224),
-                  onBackground: Color.fromARGB(255, 6, 95, 0)),
+                seedColor: Colors.green,
+                brightness: Brightness.light,
+                // background: const Color.fromARGB(255, 238, 243, 224),
+                // onBackground: Color.fromARGB(255, 6, 95, 0)
+              ),
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -103,7 +104,7 @@ class _MyAppState extends State<MyApp> {
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        darkTheme: ThemeData(
+        /* darkTheme: ThemeData(
           colorScheme: darkColorScheme ??
               ColorScheme.fromSwatch(
                 primarySwatch: Colors.green,
@@ -111,6 +112,20 @@ class _MyAppState extends State<MyApp> {
                 backgroundColor: darkColorScheme == null
                     ? Color.fromARGB(255, 20, 28, 20)
                     : null,
+              ),
+          useMaterial3: true,
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
+          }),
+        ), */
+        darkTheme: ThemeData(
+          colorScheme: darkColorScheme ??
+              ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.dark,
+                // backgroundColor: Color.fromARGB(255, 20, 28, 20),
               ),
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
