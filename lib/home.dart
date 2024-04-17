@@ -97,34 +97,32 @@ class _HomePageState extends State<HomePage> {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.background),
-                          surfaceTintColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.onBackground)),
-                      child: Row(children: [
-                        Icon(
-                          icons[subjects[index]['name']],
-                          size: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10.0, top: 10, bottom: 10),
-                          child: Text(
-                              subjects[index]['name'] +
-                                  "${subjects[index]['clickable'] || subjects[index]['name'] == "More Coming Soon" ? "" : " (Coming Soon)"}",
-                              style: TextStyle(fontSize: 25)),
-                        ),
-                      ]),
-                      onPressed: () {
-                        if (subjects[index]['clickable']) {
-                          context.go("/" + subjects[index]['name']);
-                        }
-                      },
-                    )),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.background),
+                      surfaceTintColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.onBackground)),
+                  child: Row(children: [
+                    Icon(
+                      icons[subjects[index]['name']],
+                      size: 40,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10.0, top: 10, bottom: 10),
+                      child: Text(
+                          subjects[index]['name'] +
+                              "${subjects[index]['clickable'] || subjects[index]['name'] == "More Coming Soon" ? "" : " (Coming Soon)"}",
+                          style: TextStyle(fontSize: 25)),
+                    ),
+                  ]),
+                  onPressed: () {
+                    if (subjects[index]['clickable']) {
+                      context.go("/" + subjects[index]['name']);
+                    }
+                  },
+                ),
               );
             },
           )),

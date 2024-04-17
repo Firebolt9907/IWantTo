@@ -35,7 +35,9 @@ class _CoursePageState extends State<CoursePage> {
         }
       });
       print(courses);
-      setState(() {});
+      await Future.delayed(const Duration(milliseconds: 100), () {
+        setState(() {});
+      });
     }
   }
 
@@ -70,8 +72,14 @@ class _CoursePageState extends State<CoursePage> {
               ];
             },
             body: ListView.builder(
-                itemCount: courses.length,
+                itemCount: courses.isEmpty ? 1 : courses.length,
                 itemBuilder: (context, index) {
+                  if (courses.isEmpty) {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator()]);
+                  }
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 5),
@@ -159,9 +167,10 @@ class _CoursePageState extends State<CoursePage> {
                                                         horizontal: 5.0,
                                                         vertical: 2),
                                                 child: Text(
-                                                    value['name'] +
+                                                    value.keys.toList()[0] +
                                                         ": " +
-                                                        value['value']
+                                                        value[value.keys
+                                                                .toList()[0]]
                                                             .toString() +
                                                         "/10",
                                                     style: TextStyle(

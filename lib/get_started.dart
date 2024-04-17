@@ -95,107 +95,115 @@ class _GetStartedState extends State<GetStarted> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
-        border: Border.all(color: Colors.transparent),
-        leading: CupertinoNavigationBarBackButton(
-          previousPageTitle: "Back",
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: ListView(
-          /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.only(),
-                child: Text(
-                  showPassword ? "Enter Password" : "Enter Email",
-                  // login ? 'Sign In' : 'Sign Up',
-                  style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
-                ),
+      body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              CupertinoSliverNavigationBar(
+                largeTitle:
+                    Text(showPassword ? "Enter Password" : "Enter Email",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                        )),
+                backgroundColor: Theme.of(context).colorScheme.background,
+                border: Border.all(color: Colors.transparent),
+                previousPageTitle: "Back",
               ),
-            ),
-            // IntrinsicWidth(
-            //   child: ElevatedButton(
-            //       child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
-            //       onPressed: () {
-            //         setState(() {
-            //           login = !login;
-            //         });
-            //       }),
-            // ),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    hintText: "Enter Email...",
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
+            ];
+          },
+          body: ListView(
+              /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.only(),
+                    child: Text(
+                      showPassword ? "Enter Password" : "Enter Email",
+                      // login ? 'Sign In' : 'Sign Up',
+                      style: TextStyle(
+                          fontSize: 60.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  autofillHints: const [AutofillHints.username],
-                  autofocus: !showPassword,
-                  onChanged: (text) {
-                    if (showPassword) {
-                      setState(() {
-                        showPassword = false;
-                      });
-                    }
-                  },
-                  onSubmitted: (u) {
-                    checkEmail();
-                  },
-                  controller: _email,
-                )),
-            showPassword
-                ? Padding(
+                ),
+                // IntrinsicWidth(
+                //   child: ElevatedButton(
+                //       child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
+                //       onPressed: () {
+                //         setState(() {
+                //           login = !login;
+                //         });
+                //       }),
+                // ),
+                Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     child: TextField(
-                      keyboardType: TextInputType.visiblePassword,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                        hintText: "Enter Password...",
-                        labelText: "Password",
+                        hintText: "Enter Email...",
+                        labelText: "Email",
                         border: OutlineInputBorder(),
                       ),
-                      autofillHints: const [AutofillHints.password],
-                      autofocus: true,
-                      onChanged: (text) {},
-                      onSubmitted: (u) {
-                        if (login) {
-                          signIn();
+                      autofillHints: const [AutofillHints.username],
+                      autofocus: !showPassword,
+                      onChanged: (text) {
+                        if (showPassword) {
+                          setState(() {
+                            showPassword = false;
+                          });
                         }
                       },
-                      controller: _password,
-                      obscureText: true,
-                    ))
-                : Container(),
-            showPassword && !login
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextField(
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: const InputDecoration(
-                        hintText: "Confirm Password...",
-                        labelText: "Confirm Password",
-                        border: OutlineInputBorder(),
-                      ),
-                      autofillHints: const [AutofillHints.password],
-                      onChanged: (text) {},
                       onSubmitted: (u) {
-                        if (!login) {
-                          signIn();
-                        }
+                        checkEmail();
                       },
-                      controller: _passwordRepeat,
-                      obscureText: true,
-                    ))
-                : Container(),
-            Text(error, style: TextStyle(color: Colors.red)),
-          ]),
+                      controller: _email,
+                    )),
+                showPassword
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: TextField(
+                          keyboardType: TextInputType.visiblePassword,
+                          decoration: const InputDecoration(
+                            hintText: "Enter Password...",
+                            labelText: "Password",
+                            border: OutlineInputBorder(),
+                          ),
+                          autofillHints: const [AutofillHints.password],
+                          autofocus: true,
+                          onChanged: (text) {},
+                          onSubmitted: (u) {
+                            if (login) {
+                              signIn();
+                            }
+                          },
+                          controller: _password,
+                          obscureText: true,
+                        ))
+                    : Container(),
+                showPassword && !login
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: TextField(
+                          keyboardType: TextInputType.visiblePassword,
+                          decoration: const InputDecoration(
+                            hintText: "Confirm Password...",
+                            labelText: "Confirm Password",
+                            border: OutlineInputBorder(),
+                          ),
+                          autofillHints: const [AutofillHints.password],
+                          onChanged: (text) {},
+                          onSubmitted: (u) {
+                            if (!login) {
+                              signIn();
+                            }
+                          },
+                          controller: _passwordRepeat,
+                          obscureText: true,
+                        ))
+                    : Container(),
+                Text(error, style: TextStyle(color: Colors.red)),
+              ])),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(
             // bottom: (MediaQuery.viewPaddingOf(context).bottom +

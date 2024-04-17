@@ -91,14 +91,11 @@ class _MyAppState extends State<MyApp> {
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: lightColorScheme ??
-              ColorScheme.fromSwatch(
-                primarySwatch: Colors.green,
-                brightness: Brightness.light,
-                backgroundColor:
-                    lightColorScheme == null ? Colors.lightGreen[100] : null,
-              ),
-          backgroundColor:
-              lightColorScheme == null ? Colors.lightGreen[100] : null,
+              ColorScheme.fromSeed(
+                  seedColor: Colors.green,
+                  brightness: Brightness.light,
+                  background: const Color.fromARGB(255, 238, 243, 224),
+                  onBackground: Color.fromARGB(255, 6, 95, 0)),
           useMaterial3: true,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -116,8 +113,6 @@ class _MyAppState extends State<MyApp> {
                     : null,
               ),
           useMaterial3: true,
-          backgroundColor:
-              darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

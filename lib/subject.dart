@@ -36,7 +36,9 @@ class _SubjectPageState extends State<SubjectPage> {
         }
       });
       print(courses);
-      setState(() {});
+      await Future.delayed(const Duration(milliseconds: 100), () {
+        setState(() {});
+      });
     }
   }
 
@@ -71,8 +73,13 @@ class _SubjectPageState extends State<SubjectPage> {
               ];
             },
             body: ListView.builder(
-                itemCount: courses.length,
+                itemCount: courses.isEmpty ? 1 : courses.length,
                 itemBuilder: (context, index) {
+                  if (courses.isEmpty) {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator()]);
+                  }
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 5),
