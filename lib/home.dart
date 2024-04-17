@@ -62,6 +62,11 @@ class _HomePageState extends State<HomePage> {
                 border: Border.all(color: Colors.transparent),
                 trailing: IntrinsicWidth(
                   child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.background),
+                          surfaceTintColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.onBackground)),
                       child: IntrinsicWidth(
                         child: Text(
                             FirebaseAuth.instance.currentUser?.uid == null
@@ -82,37 +87,12 @@ class _HomePageState extends State<HomePage> {
             ];
           },
           body: ListView.builder(
-            itemCount: subjects.length + 2,
+            itemCount: subjects.length,
             itemBuilder: (context, index) {
               // return ListTile(
               //   title: Text(subjects[index]['name']),
               //   leading: Icon(icons[subjects[index]['name']]),
               // );
-              if (index == subjects.length) {
-                return Center(
-                  child: Text("uid:" +
-                      (FirebaseAuth.instance.currentUser?.uid ?? "null")),
-                );
-              } else if (index == subjects.length + 1) {
-                return IntrinsicWidth(
-                  child: ElevatedButton(
-                      child: IntrinsicWidth(
-                        child: Text(
-                            FirebaseAuth.instance.currentUser?.uid == null
-                                ? "Sign In"
-                                : "Sign Out"),
-                      ),
-                      onPressed: () {
-                        if (FirebaseAuth.instance.currentUser?.uid == null) {
-                          // Navigator.pushNamed(context, "/start");
-                          context.go("/start/sign-in");
-                        } else {
-                          FirebaseAuth.instance.signOut();
-                        }
-                        setState(() {});
-                      }),
-                );
-              }
 
               return Padding(
                 padding:

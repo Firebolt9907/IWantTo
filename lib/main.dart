@@ -106,24 +106,24 @@ class _MyAppState extends State<MyApp> {
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        // darkTheme: ThemeData(
-        //   colorScheme: darkColorScheme ??
-        //       ColorScheme.fromSwatch(
-        //         primarySwatch: Colors.green,
-        //         brightness: Brightness.dark,
-        //         backgroundColor: darkColorScheme == null
-        //             ? Color.fromARGB(255, 20, 28, 20)
-        //             : null,
-        //       ),
-        // useMaterial3: true,
-        // backgroundColor:
-        //     darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
-        // pageTransitionsTheme: PageTransitionsTheme(builders: {
-        //   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        //   TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        //   defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
-        // }),
-        // ),
+        darkTheme: ThemeData(
+          colorScheme: darkColorScheme ??
+              ColorScheme.fromSwatch(
+                primarySwatch: Colors.green,
+                brightness: Brightness.dark,
+                backgroundColor: darkColorScheme == null
+                    ? Color.fromARGB(255, 20, 28, 20)
+                    : null,
+              ),
+          useMaterial3: true,
+          backgroundColor:
+              darkColorScheme == null ? Color.fromARGB(255, 20, 28, 20) : null,
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
+          }),
+        ),
         routerConfig: _router,
         // routes: {
         //   '/start': (context) => FirstPage(),
