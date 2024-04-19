@@ -33,44 +33,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-final _router = GoRouter(
-  initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
-  routes: [
-    GoRoute(
-      path: '/start',
-      builder: (context, state) => FirstPage(),
-      routes: [
-        GoRoute(
-          path: 'sign-in',
-          builder: (context, state) => GetStarted(),
-        ),
-      ],
-    ),
-    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
-      GoRoute(
-        path: 'sign-in',
-        builder: (context, state) => GetStarted(),
-      ),
-      GoRoute(
-        path: 'Settings',
-        builder: (context, state) => SettingsPage(),
-      ),
-      GoRoute(
-          path: ":subject",
-          builder: (context, state) => SubjectPage(
-                subject: state.pathParameters['subject'],
-              ),
-          routes: [
-            GoRoute(
-                path: ":course",
-                builder: (context, state) => CoursePage(
-                      course: state.pathParameters["course"],
-                      subject: state.pathParameters["subject"],
-                    ))
-          ])
-    ]),
-  ],
-);
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -80,31 +42,37 @@ class MyApp extends StatefulWidget {
 }
 
 var color = "green";
+Map<String, Color> colors = {
+  "green": Colors.green,
+  "blue": Colors.blue,
+  "red": Colors.red,
+  "yellow": Colors.yellow,
+  "purple": Colors.purple,
+  "orange": Colors.orange,
+  "teal": Colors.teal,
+  "brown": Colors.brown,
+  "grey": Colors.grey,
+  "indigo": Colors.indigo,
+  "cyan": Colors.cyan,
+  "lime": Colors.lime,
+  "amber": Colors.amber,
+  "pink": Colors.pink,
+};
 
 class _MyAppState extends State<MyApp> {
   var loggedIn = false;
-  Map<String, Color> colors = {
-    "green": Colors.green,
-    "blue": Colors.blue,
-    "red": Colors.red,
-    "yellow": Colors.yellow,
-    "purple": Colors.purple,
-    "orange": Colors.orange,
-    "teal": Colors.teal,
-    "brown": Colors.brown,
-    "grey": Colors.grey,
-    "indigo": Colors.indigo,
-    "cyan": Colors.cyan,
-    "lime": Colors.lime,
-    "amber": Colors.amber,
-    "pink": Colors.pink,
-  };
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
+    color = FirebaseAuth.instance.currentUser?.displayName ?? "green";
+  }
+
+  void updateColors() {
+    setState(() {
+      
+    });
   }
 
   @override
@@ -157,7 +125,44 @@ class _MyAppState extends State<MyApp> {
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        routerConfig: _router,
+        routerConfig:  GoRouter(
+  initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
+  routes: [
+    GoRoute(
+      path: '/start',
+      builder: (context, state) => FirstPage(),
+      routes: [
+        GoRoute(
+          path: 'sign-in',
+          builder: (context, state) => GetStarted(),
+        ),
+      ],
+    ),
+    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
+      GoRoute(
+        path: 'sign-in',
+        builder: (context, state) => GetStarted(),
+      ),
+      GoRoute(
+        path: 'settings',
+        builder: (context, state) => SettingsPage(contex: context, updateColors: updateColors,),
+      ),
+      GoRoute(
+          path: ":subject",
+          builder: (context, state) => SubjectPage(
+                subject: state.pathParameters['subject'],
+              ),
+          routes: [
+            GoRoute(
+                path: ":course",
+                builder: (context, state) => CoursePage(
+                      course: state.pathParameters["course"],
+                      subject: state.pathParameters["subject"],
+                    ))
+          ])
+    ]),
+  ],
+),
         // routes: {
         //   '/start': (context) => FirstPage(),
         //   '/': (context) => HomePage(),
