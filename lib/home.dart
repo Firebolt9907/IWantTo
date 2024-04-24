@@ -55,12 +55,14 @@ class _HomePageState extends State<HomePage> {
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
+              // All Cupertino Widgets are built into Flutter
               CupertinoSliverNavigationBar(
                 largeTitle: Text("Home",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground)),
                 backgroundColor: Theme.of(context).colorScheme.background,
                 border: Border.all(color: Colors.transparent),
+                // FirebaseAuth is a package made by the Firebase team @ Google
                 trailing: FirebaseAuth.instance.currentUser?.uid == null
                     ? IntrinsicWidth(
                         child: ElevatedButton(
@@ -77,7 +79,8 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               if (FirebaseAuth.instance.currentUser?.uid ==
                                   null) {
-                                // Navigator.pushNamed(context, "/start");
+                                // .go() is code made by the Flutter team  
+                                // @ Google in the pub.dev package go_router
                                 context.go("/sign-in");
                               } else {
                                 FirebaseAuth.instance.signOut();
@@ -86,6 +89,7 @@ class _HomePageState extends State<HomePage> {
                             }),
                       )
                     : IconButton(
+                        //
                         icon: Icon(CupertinoIcons.settings_solid,
                             color: Theme.of(context).colorScheme.primary),
                         onPressed: () {
@@ -98,20 +102,10 @@ class _HomePageState extends State<HomePage> {
           body: ListView.builder(
             itemCount: subjects.length,
             itemBuilder: (context, index) {
-              // return ListTile(
-              //   title: Text(subjects[index]['name']),
-              //   leading: Icon(icons[subjects[index]['name']]),
-              // );
-
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
                 child: ElevatedButton(
-                  // style: ButtonStyle(
-                  //     backgroundColor: MaterialStateProperty.all(
-                  //         Theme.of(context).colorScheme.background),
-                  //     surfaceTintColor: MaterialStateProperty.all(
-                  //         Theme.of(context).colorScheme.onBackground)),
                   child: Row(children: [
                     Icon(
                       icons[subjects[index]['name']],
