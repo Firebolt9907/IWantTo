@@ -63,7 +63,8 @@ class _SubjectPageState extends State<SubjectPage> {
                       widget.subject
                           .toString()
                           .replaceAll(" | ", "/")
-                          .replaceAll("_", " "),
+                          .replaceAll("_", " ")
+                          .cap(),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground)),
                   backgroundColor: Theme.of(context).colorScheme.background,
@@ -78,7 +79,12 @@ class _SubjectPageState extends State<SubjectPage> {
                   if (courses.isEmpty) {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [CircularProgressIndicator()]);
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          )
+                        ]);
                   }
                   return Padding(
                     padding: const EdgeInsets.symmetric(
@@ -124,8 +130,7 @@ class _SubjectPageState extends State<SubjectPage> {
                                                         .symmetric(
                                                         horizontal: 5.0,
                                                         vertical: 2),
-                                                    child: Text(
-                                                        "Advanced Placement",
+                                                    child: Text("AP",
                                                         style: TextStyle(
                                                             color: Theme.of(
                                                                     context)
@@ -214,4 +219,18 @@ class _SubjectPageState extends State<SubjectPage> {
 Future<void> _launchUrl(url) async {
   Uri _url = Uri.parse(url);
   await launchUrl(_url);
+}
+
+extension stringExtension on String {
+  String cap() {
+    var output = "";
+    for (var i = 0; i < this.split(" ").length; i++) {
+      output += this.split(" ")[i].substring(0, 1).toUpperCase() +
+          this.split(" ")[i].substring(1);
+      if (i == this.split(" ").length - 1) {
+        output += " ";
+      }
+    }
+    return output;
+  }
 }

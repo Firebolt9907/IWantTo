@@ -6,27 +6,36 @@ import 'package:go_router/go_router.dart';
 import 'package:i_want_to/main.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage(
-      {super.key, required this.contex, required this.updateColors});
+  const SettingsPage({super.key, required this.contex});
   final BuildContext contex;
-  final Function updateColors;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  var oldColor = "";
+  var colorsInRow = 4;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    oldColor = color;
   }
 
   @override
   Widget build(BuildContext context) {
+    if ((7 *
+                MediaQuery.sizeOf(context).width /
+                MediaQuery.sizeOf(context).height)
+            .round() !=
+        colorsInRow) {
+      setState(() {
+        colorsInRow = (7 *
+                MediaQuery.sizeOf(context).width /
+                MediaQuery.sizeOf(context).height)
+            .round();
+      });
+    }
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -69,9 +78,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         previousPageTitle: "Home",
                         onPressed: () {
                           widget.contex.pop();
-                          Future.delayed(const Duration(milliseconds: 400), () {
-                            widget.updateColors();
-                          });
                         },
                         // onPressed: widget.contex.go("/"),
                       ),
@@ -98,65 +104,74 @@ class _SettingsPageState extends State<SettingsPage> {
                         }
                         setState(() {});
                       }),
-                  oldColor != color
-                      ? Text("Refresh page to see changes")
-                      : Container(),
-                  for (var i = 0; i <= colors.length / 3; i++)
+                  for (var i = 0; i <= colors.length / colorsInRow; i++)
                     Row(
                       children: [
-                        for (var j = 0; j < 3; j++)
+                        for (var j = 0; j < colorsInRow; j++)
                           SizedBox(
-                              height: MediaQuery.sizeOf(context).width / 3,
-                              width: MediaQuery.sizeOf(context).width / 3,
+                              height: MediaQuery.sizeOf(context).width /
+                                  colorsInRow,
+                              width: MediaQuery.sizeOf(context).width /
+                                  colorsInRow,
                               child: Padding(
                                   padding: EdgeInsets.all(
-                                      MediaQuery.sizeOf(context).width / 24),
+                                      MediaQuery.sizeOf(context).width /
+                                          (colorsInRow * 8)),
                                   child: ClipRRect(
                                     borderRadius:
                                         BorderRadius.circular(1212112),
                                     child: IconButton(
-                                      icon: (i * 3) + j < colors.length &&
-                                              colors[colors.keys
-                                                      .toList()[(i * 3) + j]] ==
+                                      icon: (i * colorsInRow) + j <
+                                                  colors.length &&
+                                              colors.keys.toList()[
+                                                      (i * colorsInRow) + j] ==
                                                   color
                                           ? Stack(
                                               children: [
                                                 Container(
-                                                  color: (i * 3) + j <
+                                                  color: (i * colorsInRow) + j <
                                                           colors.length
-                                                      ? colors[
-                                                          colors.keys.toList()[
-                                                              (i * 3) + j]]
+                                                      ? colors[colors.keys
+                                                              .toList()[
+                                                          (i * colorsInRow) +
+                                                              j]]
                                                       : Colors.transparent,
                                                 ),
                                                 Center(
                                                   child: Icon(
                                                     CupertinoIcons
                                                         .checkmark_alt,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
+                                                    color: Colors.black,
+                                                    size: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width /
+                                                        (colorsInRow * 2),
                                                   ),
                                                 ),
                                               ],
                                             )
                                           : Container(
-                                              color: (i * 3) + j < colors.length
-                                                  ? colors[colors.keys
-                                                      .toList()[(i * 3) + j]]
+                                              color: (i * colorsInRow) + j <
+                                                      colors.length
+                                                  ? colors[colors.keys.toList()[
+                                                      (i * colorsInRow) + j]]
                                                   : Colors.transparent,
                                             ),
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        print(
-                                            colors.keys.toList()[(i * 3) + j]);
-                                        FirebaseAuth.instance.currentUser!
-                                            .updateDisplayName(colors.keys
-                                                .toList()[(i * 3) + j]);
-                                        setState(() {
-                                          color =
-                                              colors.keys.toList()[(i * 3) + j];
-                                        });
+                                        if ((i * colorsInRow) + j <
+                                            colors.length) {
+                                          print(colors.keys
+                                              .toList()[(i * colorsInRow) + j]);
+                                          FirebaseAuth.instance.currentUser!
+                                              .updateDisplayName(
+                                                  colors.keys.toList()[
+                                                      (i * colorsInRow) + j]);
+                                          setState(() {
+                                            color = colors.keys.toList()[
+                                                (i * colorsInRow) + j];
+                                          });
+                                        }
                                       },
                                     ),
                                   )))

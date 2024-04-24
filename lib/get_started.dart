@@ -99,160 +99,236 @@ class _GetStartedState extends State<GetStarted> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               CupertinoSliverNavigationBar(
-                largeTitle:
-                    Text(showPassword ? "Enter Password" : "Enter Email",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground,
-                        )),
+                largeTitle: Text(
+                    MediaQuery.sizeOf(context).width /
+                                MediaQuery.sizeOf(context).height >
+                            9 / 16
+                        ? ""
+                        : showPassword
+                            ? "Enter Password"
+                            : "Enter Email",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    )),
                 backgroundColor: Theme.of(context).colorScheme.background,
                 border: Border.all(color: Colors.transparent),
                 previousPageTitle: "Back",
               ),
             ];
           },
-          body: ListView(
-              /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(),
-                    child: Text(
-                      showPassword ? "Enter Password" : "Enter Email",
-                      // login ? 'Sign In' : 'Sign Up',
-                      style: TextStyle(
-                          fontSize: 60.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                // IntrinsicWidth(
-                //   child: ElevatedButton(
-                //       child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
-                //       onPressed: () {
-                //         setState(() {
-                //           login = !login;
-                //         });
-                //       }),
-                // ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: "Enter Email...",
-                        labelText: "Email",
-                        border: OutlineInputBorder(),
-                      ),
-                      autofillHints: const [AutofillHints.username],
-                      autofocus: !showPassword,
-                      onChanged: (text) {
-                        if (showPassword) {
-                          setState(() {
-                            showPassword = false;
-                          });
-                        }
-                      },
-                      onSubmitted: (u) {
-                        checkEmail();
-                      },
-                      controller: _email,
-                    )),
-                showPassword
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: TextField(
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: const InputDecoration(
-                            hintText: "Enter Password...",
-                            labelText: "Password",
-                            border: OutlineInputBorder(),
+          body: AutofillGroup(
+            child: ListView(
+                /* crossAxisAlignment: CrossAxisAlignment.center, */ children: [
+                  MediaQuery.sizeOf(context).width /
+                              MediaQuery.sizeOf(context).height >
+                          9 / 16
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(),
+                            child: Text(
+                              showPassword ? "Enter Password" : "Enter Email",
+                              // login ? 'Sign In' : 'Sign Up',
+                              style: TextStyle(
+                                  fontSize: 60.0, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          autofillHints: const [AutofillHints.password],
-                          autofocus: true,
-                          onChanged: (text) {},
-                          onSubmitted: (u) {
-                            if (login) {
-                              signIn();
-                            }
-                          },
-                          controller: _password,
-                          obscureText: true,
-                        ))
-                    : Container(),
-                showPassword && !login
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: TextField(
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: const InputDecoration(
-                            hintText: "Confirm Password...",
-                            labelText: "Confirm Password",
-                            border: OutlineInputBorder(),
-                          ),
-                          autofillHints: const [AutofillHints.password],
-                          onChanged: (text) {},
-                          onSubmitted: (u) {
-                            if (!login) {
-                              signIn();
-                            }
-                          },
-                          controller: _passwordRepeat,
-                          obscureText: true,
-                        ))
-                    : Container(),
-                Text(error, style: TextStyle(color: Colors.red)),
-              ])),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-            // bottom: (MediaQuery.viewPaddingOf(context).bottom +
-            //         MediaQuery.viewInsetsOf(context).bottom) +
-            //     10,
-            // left: 10,
-            // right: 10
-            ),
-        child: SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            height: MediaQuery.viewInsetsOf(context).bottom <
-                    MediaQuery.viewPaddingOf(context).bottom
-                ? 80 + MediaQuery.viewPaddingOf(context).bottom
-                : MediaQuery.viewInsetsOf(context).bottom + 80,
-            child: CupertinoButton(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.viewInsetsOf(context).bottom <
-                            MediaQuery.viewPaddingOf(context).bottom
-                        ? MediaQuery.viewPaddingOf(context).bottom
-                        : MediaQuery.viewInsetsOf(context).bottom),
-                child: Text(
+                        )
+                      : Container(),
+                  // IntrinsicWidth(
+                  //   child: ElevatedButton(
+                  //       child: Text("Switch to " + (!login ? 'Sign In' : 'Sign Up')),
+                  //       onPressed: () {
+                  //         setState(() {
+                  //           login = !login;
+                  //         });
+                  //       }),
+                  // ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          hintText: "Enter Email...",
+                          labelText: "Email",
+                          border: OutlineInputBorder(),
+                        ),
+                        autofillHints: const [AutofillHints.username],
+                        autofocus: !showPassword,
+                        onChanged: (text) {
+                          if (showPassword) {
+                            setState(() {
+                              showPassword = false;
+                            });
+                          }
+                        },
+                        onSubmitted: (u) {
+                          checkEmail();
+                        },
+                        controller: _email,
+                      )),
                   showPassword
-                      ? login
-                          ? 'Sign In'
-                          : 'Sign Up'
-                      : "Continue",
-                  style: TextStyle(
-                      color: !showPassword
-                          ? Theme.of(context).colorScheme.onSecondary
-                          : Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              color: !showPassword
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.primary,
-              onPressed: () {
-                if (!showPassword) {
-                  checkEmail();
-                } else {
-                  signIn();
-                }
-              },
-            )),
-      ),
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: const InputDecoration(
+                              hintText: "Enter Password...",
+                              labelText: "Password",
+                              border: OutlineInputBorder(),
+                            ),
+                            autofillHints: const [AutofillHints.password],
+                            autofocus: true,
+                            onChanged: (text) {},
+                            onSubmitted: (u) {
+                              if (login) {
+                                signIn();
+                              }
+                            },
+                            controller: _password,
+                            obscureText: true,
+                          ))
+                      : Container(),
+                  showPassword && !login
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: const InputDecoration(
+                              hintText: "Confirm Password...",
+                              labelText: "Confirm Password",
+                              border: OutlineInputBorder(),
+                            ),
+                            autofillHints: const [AutofillHints.password],
+                            onChanged: (text) {},
+                            onSubmitted: (u) {
+                              if (!login) {
+                                signIn();
+                              }
+                            },
+                            controller: _passwordRepeat,
+                            obscureText: true,
+                          ))
+                      : Container(),
+                  Text(error, style: TextStyle(color: Colors.red)),
+                  MediaQuery.sizeOf(context).width /
+                              MediaQuery.sizeOf(context).height >
+                          9 / 16
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: SizedBox(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: MediaQuery.viewInsetsOf(context).bottom <
+                                      MediaQuery.viewPaddingOf(context).bottom
+                                  ? 80 +
+                                      MediaQuery.viewPaddingOf(context).bottom
+                                  : MediaQuery.viewInsetsOf(context).bottom +
+                                      80,
+                              child: CupertinoButton(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.viewInsetsOf(context)
+                                                  .bottom <
+                                              MediaQuery.viewPaddingOf(context)
+                                                  .bottom
+                                          ? MediaQuery.viewPaddingOf(context)
+                                              .bottom
+                                          : MediaQuery.viewInsetsOf(context)
+                                              .bottom),
+                                  child: Text(
+                                    showPassword
+                                        ? login
+                                            ? 'Sign In'
+                                            : 'Sign Up'
+                                        : "Continue",
+                                    style: TextStyle(
+                                        color: !showPassword
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                color: !showPassword
+                                    ? Theme.of(context).colorScheme.secondary
+                                    : Theme.of(context).colorScheme.primary,
+                                onPressed: () {
+                                  if (!showPassword) {
+                                    checkEmail();
+                                  } else {
+                                    signIn();
+                                  }
+                                },
+                              )),
+                        )
+                      : Container(),
+                ]),
+          )),
+      bottomNavigationBar: MediaQuery.sizeOf(context).width /
+                  MediaQuery.sizeOf(context).height <=
+              9 / 16
+          ? Padding(
+              padding: EdgeInsets.only(
+                  // bottom: (MediaQuery.viewPaddingOf(context).bottom +
+                  //         MediaQuery.viewInsetsOf(context).bottom) +
+                  //     10,
+                  // left: 10,
+                  // right: 10
+                  ),
+              child: SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.viewInsetsOf(context).bottom >
+                          MediaQuery.viewPaddingOf(context).bottom
+                      ? 80 + MediaQuery.viewPaddingOf(context).bottom
+                      : MediaQuery.viewInsetsOf(context).bottom + 80,
+                  child: CupertinoButton(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.viewInsetsOf(context).bottom <
+                                  MediaQuery.viewPaddingOf(context).bottom
+                              ? MediaQuery.viewPaddingOf(context).bottom
+                              : MediaQuery.viewInsetsOf(context).bottom),
+                      child: Text(
+                        showPassword
+                            ? login
+                                ? 'Sign In'
+                                : 'Sign Up'
+                            : "Continue",
+                        style: TextStyle(
+                            color: !showPassword
+                                ? Theme.of(context).colorScheme.onSecondary
+                                : Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    color: !showPassword
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                    onPressed: () {
+                      if (!showPassword) {
+                        checkEmail();
+                      } else {
+                        signIn();
+                      }
+                    },
+                  )),
+            )
+          : null,
     );
   }
 }

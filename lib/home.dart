@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
       'clickable': false,
     },
   ];
+  var objectsPerRow = 2;
 
   Map<String, dynamic> icons = {
     'Math': Icons.calculate,
@@ -106,11 +107,11 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.background),
-                      surfaceTintColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.onBackground)),
+                  // style: ButtonStyle(
+                  //     backgroundColor: MaterialStateProperty.all(
+                  //         Theme.of(context).colorScheme.background),
+                  //     surfaceTintColor: MaterialStateProperty.all(
+                  //         Theme.of(context).colorScheme.onBackground)),
                   child: Row(children: [
                     Icon(
                       icons[subjects[index]['name']],
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   ]),
                   onPressed: () {
                     if (subjects[index]['clickable']) {
-                      context.go("/" + subjects[index]['name']);
+                      context.go(subjects[index]['route']);
                     }
                   },
                 ),

@@ -33,7 +33,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -70,9 +69,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void updateColors() {
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -125,44 +122,68 @@ class _MyAppState extends State<MyApp> {
             defaultTargetPlatform: CupertinoPageTransitionsBuilder(),
           }),
         ),
-        routerConfig:  GoRouter(
-  initialLocation: FirebaseAuth.instance.currentUser == null ? '/start' : '/',
-  routes: [
-    GoRoute(
-      path: '/start',
-      builder: (context, state) => FirstPage(),
-      routes: [
-        GoRoute(
-          path: 'sign-in',
-          builder: (context, state) => GetStarted(),
-        ),
-      ],
-    ),
-    GoRoute(path: '/', builder: (context, state) => HomePage(), routes: [
-      GoRoute(
-        path: 'sign-in',
-        builder: (context, state) => GetStarted(),
-      ),
-      GoRoute(
-        path: 'settings',
-        builder: (context, state) => SettingsPage(contex: context, updateColors: updateColors,),
-      ),
-      GoRoute(
-          path: ":subject",
-          builder: (context, state) => SubjectPage(
-                subject: state.pathParameters['subject'],
-              ),
+        routerConfig: GoRouter(
+          initialLocation:
+              FirebaseAuth.instance.currentUser == null ? '/start' : '/',
           routes: [
             GoRoute(
-                path: ":course",
-                builder: (context, state) => CoursePage(
-                      course: state.pathParameters["course"],
-                      subject: state.pathParameters["subject"],
-                    ))
-          ])
-    ]),
-  ],
-),
+              path: '/start',
+              builder: (context, state) => FirstPage(),
+              routes: [
+                GoRoute(
+                  path: 'sign-in',
+                  builder: (context, state) => GetStarted(),
+                  onExit: (context) {
+                    Future.delayed(const Duration(milliseconds: 400), () {
+                      updateColors();
+                    });
+                    return true;
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+                path: '/',
+                builder: (context, state) => HomePage(),
+                routes: [
+                  GoRoute(
+                    path: 'sign-in',
+                    builder: (context, state) => GetStarted(),
+                    onExit: (context) {
+                      Future.delayed(const Duration(milliseconds: 400), () {
+                        updateColors();
+                      });
+                      return true;
+                    },
+                  ),
+                  GoRoute(
+                    path: 'settings',
+                    builder: (context, state) => SettingsPage(
+                      contex: context,
+                    ),
+                    onExit: (context) {
+                      Future.delayed(const Duration(milliseconds: 400), () {
+                        updateColors();
+                      });
+                      return true;
+                    },
+                  ),
+                  GoRoute(
+                      path: ":subject",
+                      builder: (context, state) => SubjectPage(
+                            subject: state.pathParameters['subject'],
+                          ),
+                      routes: [
+                        GoRoute(
+                            path: ":course",
+                            builder: (context, state) => CoursePage(
+                                  course: state.pathParameters["course"],
+                                  subject: state.pathParameters["subject"],
+                                ))
+                      ])
+                ]),
+          ],
+        ),
         // routes: {
         //   '/start': (context) => FirstPage(),
         //   '/': (context) => HomePage(),
