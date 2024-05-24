@@ -1,8 +1,13 @@
+// Firebase Authentication is made by the Firebase team at Google
 import 'package:firebase_auth/firebase_auth.dart';
+// All Flutter packages below are built into Flutter
+// made by the Flutter team at Google
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// Go Router is made by the Flutter team at Google
 import 'package:go_router/go_router.dart';
+// imports the file "main.dart" shown in the first file
 import 'package:i_want_to/main.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -24,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Using a condition in the build function for responsiveness
     if ((7 *
                 MediaQuery.sizeOf(context).width /
                 MediaQuery.sizeOf(context).height)
@@ -36,8 +42,8 @@ class _SettingsPageState extends State<SettingsPage> {
             .round();
       });
     }
+    // Using an embedded MaterialApp to avoid forced refreshes
     return MaterialApp(
-        title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: colors[color]!,
@@ -77,9 +83,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       leading: CupertinoNavigationBarBackButton(
                         previousPageTitle: "Home",
                         onPressed: () {
+                          // using context from home page due to embedded materialapp
                           widget.contex.pop();
                         },
-                        // onPressed: widget.contex.go("/"),
                       ),
                     ),
                   ];
@@ -97,13 +103,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (FirebaseAuth.instance.currentUser?.uid == null) {
-                          // Navigator.pushNamed(context, "/start");
-                        } else {
+                        if (FirebaseAuth.instance.currentUser?.uid != null) {
                           FirebaseAuth.instance.signOut();
+                          widget.contex.pop();
                         }
                         setState(() {});
                       }),
+                      // creating a grid of colors to allow theme customization
                   for (var i = 0; i <= colors.length / colorsInRow; i++)
                     Row(
                       children: [
@@ -161,8 +167,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                       onPressed: () {
                                         if ((i * colorsInRow) + j <
                                             colors.length) {
-                                          print(colors.keys
-                                              .toList()[(i * colorsInRow) + j]);
                                           FirebaseAuth.instance.currentUser!
                                               .updateDisplayName(
                                                   colors.keys.toList()[

@@ -1,6 +1,10 @@
+// Firebase Authentication is made by the Firebase team at Google
 import 'package:firebase_auth/firebase_auth.dart';
+// Material is made by the Material Design team at Google
 import 'package:flutter/material.dart';
+// Cupertino is made by the Flutter team at Google
 import 'package:flutter/cupertino.dart';
+// Go Router is made by the Flutter team at Google
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,42 +16,46 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> subjects = [
-    {'name': 'Math', 'clickable': true, 'route': '/math'},
+    {
+      'name': "search",
+    },
+    {
+      'name': 'Math',
+      'clickable': true,
+      'route': '/math',
+      'icon': Icons.calculate,
+    },
     {
       'name': 'Physics',
       'clickable': false,
       'route': '/physics',
+      "icon": Icons.science,
     },
     {
       'name': 'Chemistry',
       'clickable': false,
       'route': '/chemistry',
+      "icon": Icons.science_outlined,
     },
     {
       'name': 'Biology',
       'clickable': false,
       'route': '/biology',
+      "icon": Icons.science_outlined,
     },
     {
       'name': 'English',
       'clickable': false,
       'route': '/english',
+      "icon": Icons.language,
     },
     {
       'name': "More Coming Soon",
       'clickable': false,
+      "icon": Icons.history,
     },
   ];
   var objectsPerRow = 2;
-
-  Map<String, dynamic> icons = {
-    'Math': Icons.calculate,
-    "Physics": Icons.science,
-    "Chemistry": Icons.science_outlined,
-    "Biology": Icons.science_outlined,
-    "English": Icons.language,
-    "History": Icons.history,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +63,12 @@ class _HomePageState extends State<HomePage> {
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              // All Cupertino Widgets are built into Flutter
               CupertinoSliverNavigationBar(
                 largeTitle: Text("Home",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground)),
                 backgroundColor: Theme.of(context).colorScheme.background,
                 border: Border.all(color: Colors.transparent),
-                // FirebaseAuth is a package made by the Firebase team @ Google
                 trailing: FirebaseAuth.instance.currentUser?.uid == null
                     ? IntrinsicWidth(
                         child: ElevatedButton(
@@ -79,8 +85,6 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               if (FirebaseAuth.instance.currentUser?.uid ==
                                   null) {
-                                // .go() is code made by the Flutter team  
-                                // @ Google in the pub.dev package go_router
                                 context.go("/sign-in");
                               } else {
                                 FirebaseAuth.instance.signOut();
@@ -100,35 +104,91 @@ class _HomePageState extends State<HomePage> {
             ];
           },
           body: ListView.builder(
-            itemCount: subjects.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                child: ElevatedButton(
-                  child: Row(children: [
-                    Icon(
-                      icons[subjects[index]['name']],
-                      size: 40,
+              itemCount: subjects.length,
+              itemBuilder: (context, index) {
+                if (subjects[index]["name"] != "search") {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5),
+                    child: ElevatedButton(
+                      child: Row(children: [
+                        Icon(
+                          subjects[index]['icon'],
+                          size: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, top: 10, bottom: 10),
+                          child: Text(
+                              subjects[index]['name'] +
+                                  "${subjects[index]['clickable'] || subjects[index]['name'] == "More Coming Soon" ? "" : " (Coming Soon)"}",
+                              style: TextStyle(fontSize: 25)),
+                        ),
+                      ]),
+                      onPressed: () {
+                        if (subjects[index]['clickable']) {
+                          context.go(subjects[index]['route']);
+                        }
+                      },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, top: 10, bottom: 10),
-                      child: Text(
-                          subjects[index]['name'] +
-                              "${subjects[index]['clickable'] || subjects[index]['name'] == "More Coming Soon" ? "" : " (Coming Soon)"}",
-                          style: TextStyle(fontSize: 25)),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, bottom: 15, left: 10, right: 10),
+                    child: Hero(
+                      tag: "search",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            side: MaterialStateProperty.all(BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.2),
+                                width: 2)),
+                            backgroundColor: MaterialStateProperty.all(Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .background
+                                    .withBlue(Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .background
+                                            .blue +
+                                        12)
+                                    .withGreen(Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .background
+                                            .green +
+                                        12)
+                                    .withRed(Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .background
+                                            .red +
+                                        12) ??
+                                Colors.black)),
+                        child: Row(children: [
+                          Icon(
+                            CupertinoIcons.search,
+                            size: 40,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, top: 10, bottom: 10),
+                            child:
+                                Text("Search", style: TextStyle(fontSize: 25)),
+                          ),
+                        ]),
+                        onPressed: () {
+                          context.go("/search");
+                        },
+                      ),
                     ),
-                  ]),
-                  onPressed: () {
-                    if (subjects[index]['clickable']) {
-                      context.go(subjects[index]['route']);
-                    }
-                  },
-                ),
-              );
-            },
-          )),
+                  );
+                }
+              })),
     );
   }
 }

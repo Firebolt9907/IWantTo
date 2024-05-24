@@ -1,8 +1,11 @@
+// Cloud Firestore is made by the Firebase team at Google
 import 'package:cloud_firestore/cloud_firestore.dart';
+// Cupertino is made by the Flutter team at Google
 import 'package:flutter/cupertino.dart';
+// Material is made by the Material Design team at Google
 import 'package:flutter/material.dart';
+// Go Router is made by the Flutter team at Google
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SubjectPage extends StatefulWidget {
   const SubjectPage({super.key, this.subject});
@@ -13,29 +16,33 @@ class SubjectPage extends StatefulWidget {
 }
 
 class _SubjectPageState extends State<SubjectPage> {
-  List<String> courses = [];
+  List<String> subjects = [];
   var db = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
-    getData(true);
+    getData(true, widget.subject.toString().toLowerCase());
   }
 
-  getData(initial) async {
+  // pulls data from Firestore Database and adds to the array "subjects"
+  getData(initial, subject) async {
     if (initial) {
+      print(cap(subject).substring(0, subject.length));
       await db
-          .collection(widget.subject.toString().toLowerCase() + "_websites")
+          .collection("websites")
+          .where("Subject",
+              isEqualTo: cap(subject).substring(0, subject.length))
           .get()
           .then((docs) {
         for (var doc in docs.docs) {
-          print(doc.data());
-          if (!courses.contains(doc.data()['Topic?'])) {
-            courses.add(doc.data()['Topic?']);
+          print(doc.id);
+          if (!subjects.contains(doc.data()['Topic?'])) {
+            subjects.add(doc.data()['Topic?'].replaceAll("'", ""));
           }
+          setState(() {});
         }
       });
-      print(courses);
       await Future.delayed(const Duration(milliseconds: 100), () {
         setState(() {});
       });
@@ -45,26 +52,16 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: CupertinoNavigationBar(
-        //   backgroundColor: Colors.transparent,
-        //   border: Border.all(color: Colors.transparent),
-        //   previousPageTitle: "Home",
-        //   middle: Text(
-        //     widget.subject.toString(),
-        //     style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-        //   ),
-        // ),
         body: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 CupertinoSliverNavigationBar(
                   largeTitle: Text(
-                      widget.subject
+                      cap(widget.subject
                           .toString()
                           .replaceAll(" | ", "/")
-                          .replaceAll("_", " ")
-                          .cap(),
+                          .replaceAll("_", " ")),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground)),
                   backgroundColor: Theme.of(context).colorScheme.background,
@@ -74,9 +71,11 @@ class _SubjectPageState extends State<SubjectPage> {
               ];
             },
             body: ListView.builder(
-                itemCount: courses.isEmpty ? 1 : courses.length,
+                itemCount: subjects.isEmpty ? 1 : subjects.length,
                 itemBuilder: (context, index) {
-                  if (courses.isEmpty) {
+                  // shows a loading indicator if the array "subjects" is empty
+                  // which only happens when getData() is loading data
+                  if (subjects.isEmpty) {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -104,15 +103,18 @@ class _SubjectPageState extends State<SubjectPage> {
                                 padding: const EdgeInsets.only(
                                     left: 5.0, top: 10, bottom: 5),
                                 child: Text(
-                                    courses[index]
+                                    subjects[index]
                                         .replaceAll("AP ", "")
-                                        .replaceAll("College ", ""),
+                                        .replaceAll("College ", "")
+                                        .replaceAll("HS ", ""),
                                     style: TextStyle(fontSize: 25)),
                               ),
+                              // shows the AP, High School, and College tags
+                              // if the course contains them
                               IntrinsicWidth(
                                 child: Row(
                                   children: [
-                                    courses[index].contains("AP")
+                                    subjects[index].contains("AP")
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 5,
@@ -140,7 +142,7 @@ class _SubjectPageState extends State<SubjectPage> {
                                             ),
                                           )
                                         : Container(),
-                                    courses[index].contains("HS")
+                                    subjects[index].contains("HS")
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 5,
@@ -168,8 +170,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                             ),
                                           )
                                         : Container(),
-                                    courses[index].contains("AP") ||
-                                            courses[index].contains("College")
+                                    subjects[index].contains("AP") ||
+                                            subjects[index].contains("College")
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 5,
@@ -208,7 +210,10 @@ class _SubjectPageState extends State<SubjectPage> {
                         context.go('/' +
                             widget.subject.toString() +
                             "/" +
-                            courses[index].toString().replaceAll(" ", "_"));
+                            subjects[index]
+                                .toString()
+                                .replaceAll(" ", "_")
+                                .toLowerCase());
                       },
                     ),
                   );
@@ -216,21 +221,14 @@ class _SubjectPageState extends State<SubjectPage> {
   }
 }
 
-Future<void> _launchUrl(url) async {
-  Uri _url = Uri.parse(url);
-  await launchUrl(_url);
-}
-
-extension stringExtension on String {
-  String cap() {
-    var output = "";
-    for (var i = 0; i < this.split(" ").length; i++) {
-      output += this.split(" ")[i].substring(0, 1).toUpperCase() +
-          this.split(" ")[i].substring(1);
-      if (i == this.split(" ").length - 1) {
-        output += " ";
-      }
+cap(String str) {
+  var output = "";
+  for (var i = 0; i < str.split(" ").length; i++) {
+    output += str.split(" ")[i].substring(0, 1).toUpperCase() +
+        str.split(" ")[i].substring(1);
+    if (i == str.split(" ").length - 1) {
+      output += " ";
     }
-    return output;
   }
+  return output;
 }

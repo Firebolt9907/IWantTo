@@ -44,7 +44,8 @@ dependencies:
   cloud_firestore: ^4.15.8
   url_launcher: ^6.2.6
   url_strategy: ^0.2.0
-  http: ^1.2.0
+  http: ^0.13.0
+  algolia: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
