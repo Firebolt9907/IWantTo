@@ -27,13 +27,13 @@ class _HomePageState extends State<HomePage> {
     },
     {
       'name': 'Physics',
-      'clickable': false,
+      'clickable': true,
       'route': '/physics',
       "icon": Icons.science,
     },
     {
       'name': 'Chemistry',
-      'clickable': false,
+      'clickable': true,
       'route': '/chemistry',
       "icon": Icons.science_outlined,
     },
